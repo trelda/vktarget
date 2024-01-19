@@ -1,0 +1,4 @@
+resources/views/auth/register.blade.php                                
+                                <button type="submit" class="btn btn-primary">
+                                    {{ __('Register') }}
+                                </button>
