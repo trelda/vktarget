@@ -13,23 +13,38 @@ class LomsPostExport implements FromCollection, WithHeadings
 {
     public $from = '';
     public $to = '';
+    public $type_option = '';
 
     public function __construct($params) {
         $this->from = $params['from'];
         $this->to = $params['to'];
+        $this->type_option = $params['type_option'];
     }
     /**
     * @return \Illuminate\Support\Collection
     */
     public function collection()
     {
-        $lomposts =  DB::table('lom_posts')
-            ->whereBetween('lom_posts.post_date',  [$this->from, $this->to])
-            ->join('followers', function (JoinClause $join) {
-                $join->on('lom_posts.lom_name', '=', 'followers.follower_name');
-              })
-            ->select('lom_posts.lom_name', 'lom_posts.post_link', 'lom_posts.post_type', 'followers.follower_job')
-            ->get();
+        //TODO: итак понятно
+        if ($this->type_option !== 'all') {
+            $lomposts =  DB::table('lom_posts')
+                ->whereBetween('lom_posts.post_date',  [$this->from, $this->to])
+                ->where('lom_posts.post_type', $this->type_option)
+                ->join('followers', function (JoinClause $join) {
+                    $join->on('lom_posts.lom_name', '=', 'followers.follower_name');
+                })
+                ->select('lom_posts.lom_name', 'lom_posts.post_link', 'lom_posts.post_type', 'followers.follower_job')
+                ->get();
+            } else {
+                $lomposts =  DB::table('lom_posts')
+                ->whereBetween('lom_posts.post_date',  [$this->from, $this->to])
+                ->join('followers', function (JoinClause $join) {
+                    $join->on('lom_posts.lom_name', '=', 'followers.follower_name');
+                })
+                ->select('lom_posts.lom_name', 'lom_posts.post_link', 'lom_posts.post_type', 'followers.follower_job')
+                ->get();
+
+            }
 
             $arr = array();
             foreach ($lomposts as $lompost) {

@@ -20,6 +20,20 @@
                         <label for="to" class="form-label mb-0">to:</label>
                         <input type="date" name="to" id="to">
                     </div>
+                    <div class="d-flex d-row m-3">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="type_option" id="inlineRadio1" value="Президент">
+                            <label class="form-check-label" for="inlineRadio1">Президент</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="type_option" id="inlineRadio2" value="СВО">
+                            <label class="form-check-label" for="inlineRadio2">СВО</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="type_option" id="inlineRadio3" value="all">
+                            <label class="form-check-label" for="inlineRadio3">Все</label>
+                        </div>
+                    </div>
                     <button type="sumbit" class="btn btn-success">Экспорт</button>
                 </div>
             </form>

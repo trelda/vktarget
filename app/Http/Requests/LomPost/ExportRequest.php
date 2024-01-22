@@ -24,6 +24,8 @@ class ExportRequest extends FormRequest
         return [
             'from' => 'string',
             'to' => 'string',
+            'type_option' => 'string'
+
         ];
     }
 }
