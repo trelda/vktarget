@@ -25,6 +25,7 @@ class IndexRequest extends FormRequest
             'lom_name' => 'string',
             'post_link' => 'string',
             'post_type' => 'string',
+            'post_prism' => 'string'
             //'post_date' => 'string'
         ];
     }

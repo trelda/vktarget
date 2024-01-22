@@ -25,7 +25,8 @@ class StoreRequest extends FormRequest
             'lom_name' => 'string',
             'post_link' => 'string',
             'post_type' => 'string',
-            'post_date' => 'date'
+            'post_date' => 'date',
+            'post_prism' => 'string'
         ];
     }
 }

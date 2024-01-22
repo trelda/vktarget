@@ -31,6 +31,7 @@
                     <th scope="col">lom_name</th>
                     <th scope="col">post_link</th>
                     <th scope="col">post_type</th>
+                    <th scope="col">post_prism</th>
                     <th scope="col">post_date</th>
                 </tr>
             </thead>
@@ -55,6 +56,11 @@
                     <td>
                         <div class="col">
                             {{ $lompost->post_type }}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="col">
+                            {{ $lompost->post_prism }}
                         </div>
                     </td>
                     <td>

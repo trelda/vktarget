@@ -5,11 +5,11 @@
         <form action="{{ route('lom.store') }}" method="post">
             @csrf
             <div class="mb-3">
-                <label for="url" class="form-label">url</label>
+                <label for="url" class="form-label">Ссылка</label>
                 <input type="text" name="url" class="form-control" id="url" required>
             </div>
             <div class="mb-3">
-                <label for="follower_job" class="form-label">job</label>
+                <label for="follower_job" class="form-label">Должность</label>
                 <input type="text" name="follower_job" class="form-control" id="follower_job" required>
             </div>
             <div class="mb-3">

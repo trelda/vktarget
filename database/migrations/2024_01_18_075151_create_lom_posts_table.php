@@ -14,11 +14,12 @@ return new class extends Migration
         Schema::create('lom_posts', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->lom_id();
-            $table->lom_name();
-            $table->post_link();
-            $table->post_type();
-            $table->post_date();
+            $table->string('lom_id')->nullable();
+            $table->string('lom_name')->nullable();
+            $table->string('post_link')->nullable();
+            $table->string('post_type')->nullable();
+            $table->string('post_prism')->nullable();
+            $table->dateTime('post_date');
 
             $table->softDeletes();
         });
