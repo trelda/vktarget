@@ -39,34 +39,46 @@
             @foreach($lomposts as $lompost)
                 <tr>
                     <td>
-                        <div class="col">
-                             {{ $lompost->id }}
-                        </div>
+                        <a class="text-decoration-none text-dark" href="{{ route('lompost.edit', $lompost->id) }}">
+                            <div class="col">
+                                {{ $lompost->id }}
+                            </div>
+                        </a>
                     </td>
                     <td>
-                        <div class="col">
-                            {{ $lompost->lom_name }}
-                        </div>
+                        <a class="text-decoration-none text-dark" href="{{ route('lompost.edit', $lompost->id) }}">
+                            <div class="col">
+                                {{ $lompost->lom_name }}
+                            </div>
+                        </a>
                     </td>
                     <td>
-                        <div class="col">
-                            {{ $lompost->post_link }}
-                        </div>
+                        <a class="text-decoration-none text-dark" href="{{ route('lompost.edit', $lompost->id) }}">
+                            <div class="col">
+                                {{ $lompost->post_link }}
+                            </div>
+                        </a>
                     </td>
                     <td>
-                        <div class="col">
-                            {{ $lompost->post_type }}
-                        </div>
+                        <a class="text-decoration-none text-dark" href="{{ route('lompost.edit', $lompost->id) }}">
+                            <div class="col">
+                                {{ $lompost->post_type }}
+                            </div>
+                        </a>
                     </td>
                     <td>
-                        <div class="col">
-                            {{ $lompost->post_prism }}
-                        </div>
+                        <a class="text-decoration-none text-dark" href="{{ route('lompost.edit', $lompost->id) }}">
+                            <div class="col">
+                                {{ $lompost->post_prism }}
+                            </div>
+                        </a>
                     </td>
                     <td>
-                        <div class="col">
-                            {{ $lompost->post_date }}
-                        </div>
+                        <a class="text-decoration-none text-dark" href="{{ route('lompost.edit', $lompost->id) }}">
+                            <div class="col">
+                                {{ $lompost->post_date }}
+                            </div>
+                        </a>
                     </td>
                 </tr>
             @endforeach

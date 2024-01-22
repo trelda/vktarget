@@ -52,5 +52,6 @@ Route::group(['namespace' => '\App\Http\Controllers\LomPost', 'middleware' => ['
     Route::get('/lompost', [App\Http\Controllers\LomPost\CreateController::class, '__invoke'])->name('lompost.create');
     Route::post('/lompost', [App\Http\Controllers\LomPost\StoreController::class, '__invoke'])->name('lompost.store');
     Route::post('/lomposts/export', [\App\Http\Controllers\LomPost\ExportController::class, '__invoke'])->name('lompost.export');
-
+    Route::get('/lompost/{lompost}', [App\Http\Controllers\LomPost\EditController::class, '__invoke'])->name('lompost.edit');
+    Route::patch('/lomposts/{lompost}', [App\Http\Controllers\LomPost\UpdateController::class, '__invoke'])->name('lompost.update');
 });

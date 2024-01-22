@@ -27,7 +27,7 @@
             </div>
             <div class="mb-3">
                 <label for="post_prism" class="form-label">Занесено в Посев: </label>
-                <input type="checkbox" name="post_prism" class="form-check-input" id="post_prism" required>
+                <input type="checkbox" name="post_prism" class="form-check-input" id="post_prism">
             </div>
             <div class="mb-3">
                 <label for="post_date" class="form-label">Дата выхода поста</label>

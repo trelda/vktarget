@@ -7,8 +7,9 @@ use Illuminate\Support\Facades\Auth;
 
 class EditController extends BaseController
 {
-    public function __invoke(LomPost $lom)
+    public function __invoke(LomPost $lompost)
     {
-        return view('lom.edit', compact('lom'));
+        $lompost->post_prism = ($lompost->post_prism =='on') ? 'checked' : '';
+        return view('lompost.edit', compact('lompost'));
     }
 }

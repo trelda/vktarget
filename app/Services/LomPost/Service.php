@@ -6,11 +6,11 @@ use App\Models\LomPost;
 class Service {
 
     public function store($data) {
-        $lom = LomPost::create($data);
-        return $lom->id;
+        $lompost = LomPost::create($data);
+        return $lompost->id;
     }
 
-    Public function update($lom, $data) {
-        $lom->update($data);
+    Public function update($lompost, $data) {
+        $lompost->update($data);
     }
 }
