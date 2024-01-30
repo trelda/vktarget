@@ -43,24 +43,26 @@ class LomsPostExport implements FromCollection, WithHeadings
                 })
                 ->select('lom_posts.lom_name', 'lom_posts.post_link', 'lom_posts.post_type', 'followers.follower_job')
                 ->get();
-
             }
 
             $arr = array();
-            foreach ($lomposts as $lompost) {
-                $arr[] = ['name' => $lompost->lom_name, 'job' => $lompost->follower_job, 'link' => $lompost->post_link];
-            }
-            array_multisort($arr);
-            $out[] = ['name' => $arr[0]['name'], 'job' => $arr[0]['job'], 'links' => $arr[0]['link']];
-            $j = 0;
-            for ($i=1; $i < count($arr); $i++) { 
-                if ($out[$j]['name'] == $arr[$i]['name']) {
-                    $out[$j]['links'] .= Chr(10).Chr(13).$arr[$i]['link'];
-                } else {
-                    $out[] = ['name' => $arr[$i]['name'], 'job' => $arr[$i]['job'], 'links' => $arr[$i]['link']];
-                    $j++;
+            if (count($lomposts) > 0) {
+                foreach ($lomposts as $lompost) {
+                    $arr[] = ['name' => $lompost->lom_name, 'job' => $lompost->follower_job, 'link' => $lompost->post_link];
+                }
+                array_multisort($arr);
+                $out[] = ['name' => $arr[0]['name'], 'job' => $arr[0]['job'], 'links' => $arr[0]['link']];
+                $j = 0;
+                for ($i=1; $i < count($arr); $i++) { 
+                    if ($out[$j]['name'] == $arr[$i]['name']) {
+                        $out[$j]['links'] .= Chr(10).Chr(13).$arr[$i]['link'];
+                    } else {
+                        $out[] = ['name' => $arr[$i]['name'], 'job' => $arr[$i]['job'], 'links' => $arr[$i]['link']];
+                        $j++;
+                    }
                 }
             }
+
             $collection = new Collection();
             foreach($out as $item){
                 $collection->push(
@@ -70,8 +72,6 @@ class LomsPostExport implements FromCollection, WithHeadings
                         'links'=> $item['links'],
                 ]);
             }
-
-
             return $collection;
     }
   
