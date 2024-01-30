@@ -99,6 +99,7 @@
             </tbody>
         </table>
         <div>
+        {{ $lomposts->withQueryString()->links() }}
         </div>
     <div>
 @endsection

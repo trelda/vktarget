@@ -33,7 +33,7 @@ class LomsPostExport implements FromCollection, WithHeadings
                 ->join('followers', function (JoinClause $join) {
                     $join->on('lom_posts.lom_name', '=', 'followers.follower_name');
                 })
-                ->select('lom_posts.lom_name', 'lom_posts.post_link', 'lom_posts.post_type', 'followers.follower_job')
+                ->select('lom_posts.lom_name', 'lom_posts.post_link', 'lom_posts.post_type', 'followers.follower_job', 'lom_posts.post_prism')
                 ->get();
             } else {
                 $lomposts =  DB::table('lom_posts')
@@ -41,23 +41,25 @@ class LomsPostExport implements FromCollection, WithHeadings
                 ->join('followers', function (JoinClause $join) {
                     $join->on('lom_posts.lom_name', '=', 'followers.follower_name');
                 })
-                ->select('lom_posts.lom_name', 'lom_posts.post_link', 'lom_posts.post_type', 'followers.follower_job')
+                ->select('lom_posts.lom_name', 'lom_posts.post_link', 'lom_posts.post_type', 'followers.follower_job', 'lom_posts.post_prism')
                 ->get();
             }
 
             $arr = array();
             if (count($lomposts) > 0) {
                 foreach ($lomposts as $lompost) {
-                    $arr[] = ['name' => $lompost->lom_name, 'job' => $lompost->follower_job, 'link' => $lompost->post_link];
+                    $arr[] = ['name' => $lompost->lom_name, 'job' => $lompost->follower_job, 'link' => $lompost->post_link, 'type' => $lompost->post_type, 'prism'  => $lompost->post_prism];
                 }
                 array_multisort($arr);
-                $out[] = ['name' => $arr[0]['name'], 'job' => $arr[0]['job'], 'links' => $arr[0]['link']];
+                $out[] = ['name' => $arr[0]['name'], 'job' => $arr[0]['job'], 'links' => $arr[0]['link'], 'type' => $arr[0]['type'], 'prism' => $arr[0]['prism']];
                 $j = 0;
                 for ($i=1; $i < count($arr); $i++) { 
                     if ($out[$j]['name'] == $arr[$i]['name']) {
                         $out[$j]['links'] .= Chr(10).Chr(13).$arr[$i]['link'];
+                        $out[$j]['type'] .= Chr(10).Chr(13).$arr[$i]['type'];
+                        $out[$j]['prism'] .= Chr(10).Chr(13).$arr[$i]['prism'];
                     } else {
-                        $out[] = ['name' => $arr[$i]['name'], 'job' => $arr[$i]['job'], 'links' => $arr[$i]['link']];
+                        $out[] = ['name' => $arr[$i]['name'], 'job' => $arr[$i]['job'], 'links' => $arr[$i]['link'], 'type' => $arr[0]['type'], 'prism' => $arr[0]['prism']];
                         $j++;
                     }
                 }
@@ -69,7 +71,9 @@ class LomsPostExport implements FromCollection, WithHeadings
                     (object)[
                         'name' => $item['name'],
                         'follower_job' => $item['job'],
-                        'links'=> $item['links'],
+                        'links' => $item['links'],
+                        'type' => $item['type'],
+                        'prism' => $item['prism'],
                 ]);
             }
             return $collection;
@@ -81,6 +85,8 @@ class LomsPostExport implements FromCollection, WithHeadings
             'Имя',
             'Должность',
             'Ссылки с '. $this->from. ' по ' .$this->to,
+            'Тип поста',
+            'Призма'
         ];
     }
 
