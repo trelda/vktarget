@@ -48,32 +48,50 @@ class LomsPostExport implements FromCollection, WithHeadings
             $arr = array();
             if (count($lomposts) > 0) {
                 foreach ($lomposts as $lompost) {
-                    $arr[] = ['name' => $lompost->lom_name, 'job' => $lompost->follower_job, 'link' => $lompost->post_link, 'type' => $lompost->post_type, 'prism'  => $lompost->post_prism];
+                    $arr[] = [
+                        'name' => $lompost->lom_name, 
+                        'job' => $lompost->follower_job, 
+                        'link' => $lompost->post_link, 
+                        'type' => $lompost->post_type, 
+                        'prism'  => $lompost->post_prism
+                    ];
                 }
                 array_multisort($arr);
-                $out[] = ['name' => $arr[0]['name'], 'job' => $arr[0]['job'], 'links' => $arr[0]['link'], 'type' => $arr[0]['type'], 'prism' => $arr[0]['prism']];
+                $out[] = [
+                    'name' => $arr[0]['name'], 
+                    'job' => $arr[0]['job'], 
+                    'links' => $arr[0]['link'], 
+                    'types' => $arr[0]['type'], 
+                    'prisms' => $arr[0]['prism']
+                ];
                 $j = 0;
                 for ($i=1; $i < count($arr); $i++) { 
                     if ($out[$j]['name'] == $arr[$i]['name']) {
-                        $out[$j]['links'] .= Chr(10).Chr(13).$arr[$i]['link'];
-                        $out[$j]['type'] .= Chr(10).Chr(13).$arr[$i]['type'];
-                        $out[$j]['prism'] .= Chr(10).Chr(13).$arr[$i]['prism'];
+                        $out[$j]['links'] .= Chr(10).$arr[$i]['link'];
+                        $out[$j]['types'] .= Chr(10).$arr[$i]['type'];
+                        $out[$j]['prisms'] .= Chr(10).$arr[$i]['prism'];
                     } else {
-                        $out[] = ['name' => $arr[$i]['name'], 'job' => $arr[$i]['job'], 'links' => $arr[$i]['link'], 'type' => $arr[0]['type'], 'prism' => $arr[0]['prism']];
+                        $out[] = [
+                            'name' => $arr[$i]['name'], 
+                            'job' => $arr[$i]['job'], 
+                            'links' => $arr[$i]['link'], 
+                            'types' => $arr[$i]['type'], 
+                            'prisms' => $arr[$i]['prism']
+                        ];
                         $j++;
                     }
                 }
             }
 
             $collection = new Collection();
-            foreach($out as $item){
+            foreach($out as $item) {
                 $collection->push(
                     (object)[
                         'name' => $item['name'],
                         'follower_job' => $item['job'],
                         'links' => $item['links'],
-                        'type' => $item['type'],
-                        'prism' => $item['prism'],
+                        'type' => $item['types'],
+                        'prism' => $item['prisms'],
                 ]);
             }
             return $collection;

@@ -12,8 +12,8 @@ class ExportController extends BaseController
     public function __invoke(ExportRequest $request) {
         {
             $data = $request->validated();
-           return Excel::download(new LomsPostExport($data), 'posts.xlsx');
-        //    return view('lompost.index');
+            return Excel::download(new LomsPostExport($data), 'posts.xlsx');
+
         }
     }
 }
