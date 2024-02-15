@@ -18,85 +18,78 @@ class LomsPostExport implements FromCollection, WithHeadings
     public function __construct($params) {
         $this->from = $params['from'];
         $this->to = $params['to'];
-        $this->type_option = $params['type_option'];
+        $this->type_option = (isset($params['type_option'])) ? $params['type_option'] : 'all';
     }
+
     /**
-    * @return \Illuminate\Support\Collection
-    */
-    public function collection()
+     * @return Collection|\Illuminate\Support\Collection
+     */
+    public function collection(): Collection|\Illuminate\Support\Collection
     {
-        //TODO: итак понятно
+        $lomPosts =  DB::table('lom_posts')
+            ->whereBetween('lom_posts.post_date',  [$this->from, $this->to])
+            ->join('followers', function (JoinClause $join) {
+                $join->on('lom_posts.lom_name', '=', 'followers.follower_name');
+            })
+            ->select('lom_posts.lom_name', 'lom_posts.post_link', 'lom_posts.post_type', 'followers.follower_job', 'lom_posts.post_prism');
+
         if ($this->type_option !== 'all') {
-            $lomposts =  DB::table('lom_posts')
-                ->whereBetween('lom_posts.post_date',  [$this->from, $this->to])
-                ->where('lom_posts.post_type', $this->type_option)
-                ->join('followers', function (JoinClause $join) {
-                    $join->on('lom_posts.lom_name', '=', 'followers.follower_name');
-                })
-                ->select('lom_posts.lom_name', 'lom_posts.post_link', 'lom_posts.post_type', 'followers.follower_job', 'lom_posts.post_prism')
-                ->get();
-            } else {
-                $lomposts =  DB::table('lom_posts')
-                ->whereBetween('lom_posts.post_date',  [$this->from, $this->to])
-                ->join('followers', function (JoinClause $join) {
-                    $join->on('lom_posts.lom_name', '=', 'followers.follower_name');
-                })
-                ->select('lom_posts.lom_name', 'lom_posts.post_link', 'lom_posts.post_type', 'followers.follower_job', 'lom_posts.post_prism')
-                ->get();
-            }
+            $lomPosts->where('lom_posts.post_type', $this->type_option);
+        }
+        $lomPosts = $lomPosts->get();
 
-            $arr = array();
-            if (count($lomposts) > 0) {
-                foreach ($lomposts as $lompost) {
-                    $arr[] = [
-                        'name' => $lompost->lom_name, 
-                        'job' => $lompost->follower_job, 
-                        'link' => $lompost->post_link, 
-                        'type' => $lompost->post_type, 
-                        'prism'  => $lompost->post_prism
-                    ];
-                }
-                array_multisort($arr);
-                $out[] = [
-                    'name' => $arr[0]['name'], 
-                    'job' => $arr[0]['job'], 
-                    'links' => $arr[0]['link'], 
-                    'types' => $arr[0]['type'], 
-                    'prisms' => $arr[0]['prism']
+        $arr = array();
+        if (count($lomPosts) > 0) {
+            foreach ($lomPosts as $lomPost) {
+                $arr[] = [
+                    'name' => $lomPost->lom_name,
+                    'job' => $lomPost->follower_job,
+                    'link' => $lomPost->post_link,
+                    'type' => $lomPost->post_type,
+                    'prism'  => $lomPost->post_prism
                 ];
-                $j = 0;
-                for ($i=1; $i < count($arr); $i++) { 
-                    if ($out[$j]['name'] == $arr[$i]['name']) {
-                        $out[$j]['links'] .= Chr(10).$arr[$i]['link'];
-                        $out[$j]['types'] .= Chr(10).$arr[$i]['type'];
-                        $out[$j]['prisms'] .= Chr(10).$arr[$i]['prism'];
-                    } else {
-                        $out[] = [
-                            'name' => $arr[$i]['name'], 
-                            'job' => $arr[$i]['job'], 
-                            'links' => $arr[$i]['link'], 
-                            'types' => $arr[$i]['type'], 
-                            'prisms' => $arr[$i]['prism']
-                        ];
-                        $j++;
-                    }
+            }
+            array_multisort($arr);
+            $out[] = [
+                'name' => $arr[0]['name'],
+                'job' => $arr[0]['job'],
+                'links' => $arr[0]['link'],
+                'types' => $arr[0]['type'],
+                'prisms' => $arr[0]['prism']
+            ];
+            $j = 0;
+            for ($i=1; $i < count($arr); $i++) {
+                if ($out[$j]['name'] == $arr[$i]['name']) {
+                    $out[$j]['links'] .= Chr(10).$arr[$i]['link'];
+                    $out[$j]['types'] .= Chr(10).$arr[$i]['type'];
+                    $out[$j]['prisms'] .= Chr(10).$arr[$i]['prism'];
+                } else {
+                    $out[] = [
+                        'name' => $arr[$i]['name'],
+                        'job' => $arr[$i]['job'],
+                        'links' => $arr[$i]['link'],
+                        'types' => $arr[$i]['type'],
+                        'prisms' => $arr[$i]['prism']
+                    ];
+                    $j++;
                 }
             }
-
-            $collection = new Collection();
-            foreach($out as $item) {
-                $collection->push(
-                    (object)[
-                        'name' => $item['name'],
-                        'follower_job' => $item['job'],
-                        'links' => $item['links'],
-                        'type' => $item['types'],
-                        'prism' => $item['prisms'],
-                ]);
-            }
-            return $collection;
+        }
+        $collection = new Collection();
+        foreach($out as $item) {
+            $collection->push(
+                (object)[
+                    'name' => $item['name'],
+                    'follower_job' => $item['job'],
+                    'links' => $item['links'],
+                    'type' => $item['types'],
+                    'prism' => $item['prisms'],
+                ]
+            );
+        }
+        return $collection;
     }
-  
+
     public function headings() :array
     {
         return [
