@@ -31,28 +31,13 @@ class RabbitMQService
         $callback = function ($msg) {
             echo('query key: ' . $msg->delivery_info['routing_key'] . PHP_EOL);
             $vk = new VKService();
-            switch($msg->delivery_info['routing_key']) {
-                case 'vktarget_key':
-                    echo 'in query' . PHP_EOL;
-                    $vk->vkGetGroup($msg->body);
-                    break;
-                case 'vktarget_members':
-                    echo 'get members' . PHP_EOL;
-                    $vk->updateMembers($msg->body);
-                    break;
-                case 'vktarget_newuser':
-                    echo 'get userId&name' . PHP_EOL;
-                    $vk->vkGetUserId($msg->body);
-                    break;
-                case 'vktarget_followerupdate':
-                    echo 'get friends' . PHP_EOL;
-                    $vk->updateFriends($msg->body);
-                    break;
-                default:
-                    echo $msg->body . PHP_EOL;
-                    echo 'not in query' . PHP_EOL;
-                    $vk->getGroupMembers($msg->body);
-            }
+            match ($msg->delivery_info['routing_key']) {
+                'vktarget_key' => $vk->vkGetGroup($msg->body),
+                'vktarget_members' => $vk->updateMembers($msg->body),
+                'vktarget_newuser' => $vk->vkGetUserId($msg->body),
+                'vktarget_followerupdate' => $vk->updateFriends($msg->body),
+                default => $vk->getGroupMembers($msg->body)
+            };
         };
         $channel->basic_consume('vktarget', '', false, true, false, false, $callback);
         while ($channel->is_open()) {
